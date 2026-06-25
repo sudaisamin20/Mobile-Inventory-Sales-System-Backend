@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  fullName  String
+  phoneNo   String
+}
+
+model Device {
+  id                String          @id @default(uuid())
+  brand             String
+  model             String
+  color             String
+  purchaseDate      DateTime
+  createdAt         DateTime        @default(now())
+  backImage         String?
+  batteryHealth     Int
+  cameraCondition   String
+  chargingCondition String
+  condition         String
+  countryVersion    String
+  faceIdStatus      String
+  fingerprintStatus String
+  frontImage        String?
+  imei1             String          @unique
+  imei2             String?
+  invoiceImage      String?
+  invoiceNumber     String
+  networkLockStatus String
+  ptaStatus         String
+  purchasePrice     Float
+  quantity          Int             @default(1)
+  screenCondition   String
+  sellingPrice      Float
+  serialNumber      String
+  speakerCondition  String
+  supplierName      String
+  tacCode           String
+  updatedAt         DateTime        @updatedAt
+  variant           String
+  warrantyDays      Int
+  waterpakStatus    String
+  deviceStatus      DeviceStatus    @default(IN_STOCK)
+  deviceHistories   DeviceHistory[]
+  sales             Sales[]
+}
+
+model Sales {
+  id              String        @id @default(uuid())
+  invoiceNo       String
+  soldPrice       Float
+  soldAt          DateTime      @default(now())
+  customerName    String
+  paymentType     PaymentType   @default(CASH)
+  phoneNo         String
+  createdAt       DateTime      @default(now())
+  notes           String?
+  updatedAt       DateTime      @updatedAt
+  deviceId        String
+  pdf             String        @default(uuid())
+  paymentStatus   PaymentStatus
+  receivedAmount  Float
+  remainingAmount Float
+  author          Device        @relation(fields: [deviceId], references: [id])
+}
+
+model DeviceHistory {
+  id          String      @id @default(uuid())
+  deviceId    String
+  type        HistoryType
+  oldValue    String?
+  newValue    String?
+  note        String?
+  performedBy String?
+  createdAt   DateTime    @default(now())
+  device      Device      @relation(fields: [deviceId], references: [id])
+
+  @@index([deviceId])
+}
+
+enum PaymentStatus {
+  PAID
+  PENDING
+  REFUND
+  CANCELLED
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum DeviceStatus {
+  IN_STOCK
+  SOLD
+  RETURNED
+}
+
+enum RepairStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum PaymentType {
+  CASH
+  CARD
+  EASYPAISA
+  JAZZCASH
+  BANK_TRANSFER
+  OTHER
+}
+
+enum HistoryType {
+  ADDED
+  SOLD
+  UPDATED
+  PRICE_CHANGE
+  STATUS_CHANGE
+  DELETED
+  STOCK_ADDED
+  PAYMENT_COMPLETED
+}
