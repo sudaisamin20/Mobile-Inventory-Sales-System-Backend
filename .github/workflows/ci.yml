@@ -49,5 +49,5 @@ jobs:
           context: .
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
-            ghcr.io/sudaysamin/bmz-backend:latest
-            ghcr.io/sudaysamin/bmz-backend:sha-${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/bmz-backend:latest
+            ghcr.io/${{ github.repository_owner }}/bmz-backend:sha-${{ github.sha }}
