@@ -1,14 +1,6 @@
-/*
-  Warnings:
-
-  - The values [UNDER_REPAIR] on the enum `DeviceStatus` will be removed. If these variants are still used in the database, this will fail.
-  - The values [STAFF] on the enum `UserRole` will be removed. If these variants are still used in the database, this will fail.
-
-*/
 -- AlterEnum
 BEGIN;
 CREATE TYPE "DeviceStatus_new" AS ENUM ('IN_STOCK', 'SOLD', 'RETURNED');
-ALTER TABLE "Device" ALTER COLUMN "deviceStatus" TYPE "DeviceStatus_new" USING ("deviceStatus"::text::"DeviceStatus_new");
 ALTER TYPE "DeviceStatus" RENAME TO "DeviceStatus_old";
 ALTER TYPE "DeviceStatus_new" RENAME TO "DeviceStatus";
 DROP TYPE "public"."DeviceStatus_old";
@@ -26,7 +18,4 @@ ALTER TABLE "User" ALTER COLUMN "role" SET DEFAULT 'USER';
 COMMIT;
 
 -- AlterTable
-ALTER TABLE "Device" ADD COLUMN     "deviceStatus" "DeviceStatus" NOT NULL DEFAULT 'IN_STOCK';
-
--- AlterTable
-ALTER TABLE "User" ALTER COLUMN "role" SET DEFAULT 'USER';
+ALTER TABLE "Device" ADD COLUMN "deviceStatus" "DeviceStatus" NOT NULL DEFAULT 'IN_STOCK';

@@ -52,6 +52,7 @@ export const generatePDF = async (
     browser = await puppeteer.launch({
       headless: true,
       executablePath:
+        process.env.PUPPETEER_EXECUTABLE_PATH ||
         "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
